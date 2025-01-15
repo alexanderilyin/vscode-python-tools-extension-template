@@ -9,18 +9,7 @@ import pathlib
 import sys
 import traceback
 
-
-# **********************************************************
-# Update sys.path before importing any bundled libraries.
-# **********************************************************
-def update_sys_path(path_to_add: str, strategy: str) -> None:
-    """Add given path to `sys.path`."""
-    if path_to_add not in sys.path and os.path.isdir(path_to_add):
-        if strategy == "useBundled":
-            sys.path.insert(0, path_to_add)
-        elif strategy == "fromEnvironment":
-            sys.path.append(path_to_add)
-
+from tool.lsp_utils import update_sys_path
 
 # Ensure that we can import LSP libraries, and other bundled libraries.
 update_sys_path(
@@ -45,7 +34,7 @@ while not EXIT_NOW:
         continue
 
     if method == "run":
-        is_exception = False
+        is_exception = False  # pylint: disable=invalid-name
         # This is needed to preserve sys.path, pylint modifies
         # sys.path and that might not work for this scenario
         # next time around.
@@ -65,7 +54,7 @@ while not EXIT_NOW:
                 )
             except Exception:  # pylint: disable=broad-except
                 result = utils.RunResult("", traceback.format_exc(chain=True))
-                is_exception = True
+                is_exception = True  # pylint: disable=invalid-name
 
         response = {"id": msg["id"]}
         if result.stderr:

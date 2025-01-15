@@ -2,8 +2,16 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/python
 {
 	"name": "Python 3",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/javascript-node:22-bookworm",
+    "build": {
+        "dockerfile": "./Dockerfile"
+    },
+    "postStartCommand": {
+        // "Install esbenp.prettier-vscode dependencies": "npm install",
+        // "Install pre-commit hooks": "pre-commit install",
+        "Start D-Bus": "sudo service dbus start & dbus-daemon --session --address=$DBUS_SESSION_BUS_ADDRESS --nofork --nopidfile --syslog-only && sleep",
+        // "Install Nvidia Drivers": "# TODO: sudo apt-get install nvidia-driver-515",
+        // "Install Python dependencies": "pip install --break-system-packages python-jsonrpc-server"
+    },
 	"features": {
 		"ghcr.io/devcontainers/features/github-cli:1": {
 			"installDirectlyFromGitHubRelease": true,
@@ -25,7 +33,8 @@
 				"eamodio.gitlens",
 				"firefox-devtools.vscode-firefox-debug",
 				"GitHub.vscode-pull-request-github",
-				"ms-kubernetes-tools.vscode-kubernetes-tools"
+				"ms-kubernetes-tools.vscode-kubernetes-tools",
+				"ms-azuretools.vscode-docker"
 			]
 		}
 	}

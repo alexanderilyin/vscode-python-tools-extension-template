@@ -2,12 +2,12 @@
 
 set -euxo pipefail
 
-python -m pip install pip-tools
-pip-compile --generate-hashes --resolver=backtracking --upgrade ./requirements.in
+# python -m pip install pip-tools
+# pip-compile --generate-hashes --resolver=backtracking --upgrade ./requirements.in
 
 python -m pip install nox
 nox --session setup # 7m24.615s
-python -m pip install -r src/test/python_tests/requirements.txt
+# python -m pip install -r src/test/python_tests/requirements.txt
 npm install
 npm audit fix
 
@@ -30,3 +30,13 @@ npm update
 
 # TESTING
 npm install --save-dev @vscode/test-cli @vscode/test-electron
+
+# npm rm @types/glob
+service dbus status
+npm run x-test
+
+######
+# V2 #
+######
+
+python -m pip install nox

@@ -1,22 +1,22 @@
 {
     "name": "partcad",
-    "displayName": "<pytool-display-name>",
+    "displayName": "PartCAD",
     "description": "Linting support for python files using `partcad`.",
     "version": "2022.0.0-dev",
     "preview": true,
     "serverInfo": {
-        "name": "<pytool-display-name>",
+        "name": "PartCAD",
         "module": "partcad"
     },
-    "publisher": "<my-publisher>",
+    "publisher": "alexanderilyin",
     "license": "MIT",
-    "homepage": "https://github.com/<my-github>/<my-extension-project>",
+    "homepage": "https://github.com/alexanderilyin/vscode-python-tools-extension-template",
     "repository": {
         "type": "git",
-        "url": "https://github.com/<my-github>/<my-extension-project>.git"
+        "url": "https://github.com/alexanderilyin/vscode-python-tools-extension-template.git"
     },
     "bugs": {
-        "url": "https://github.com/<my-github>/<my-extension-project>/issues"
+        "url": "https://github.com/alexanderilyin/vscode-python-tools-extension-template/issues"
     },
     "galleryBanner": {
         "color": "#1e415e",
@@ -40,7 +40,7 @@
     "capabilities": {
         "virtualWorkspaces": {
             "supported": false,
-            "description": "Virtual Workspaces are not supported with <pytool-display-name>."
+            "description": "Virtual Workspaces are not supported with PartCAD."
         }
     },
     "activationEvents": [
@@ -56,9 +56,10 @@
         "compile-tests": "tsc -p . --outDir out",
         "watch-tests": "tsc -p . -w --outDir out",
         "pretest": "npm run compile-tests && npm run compile && npm run lint",
-        "lint": "eslint src --ext ts",
+        "lint": "eslint src",
         "format-check": "prettier --check 'src/**/*.ts' 'build/**/*.yml' '.github/**/*.yml'",
         "test": "vscode-test",
+        "x-test": "xvfb-run -a npm test",
         "vsce-package": "vsce package -o partcad.vsix"
     },
     "contributes": {
@@ -128,7 +129,7 @@
         "commands": [
             {
                 "title": "Restart Server",
-                "category": "<pytool-display-name>",
+                "category": "PartCAD",
                 "command": "partcad.restart"
             }
         ]
@@ -140,18 +141,17 @@
     },
     "devDependencies": {
         "@types/fs-extra": "^11.0.4",
-        "@types/glob": "^8.1.0",
         "@types/node": "22.x",
         "@types/vscode": "1.96.0",
-        "@typescript-eslint/eslint-plugin": "^8.19.1",
-        "@typescript-eslint/parser": "^8.19.1",
+        "@typescript-eslint/eslint-plugin": "^8.20.0",
+        "@typescript-eslint/parser": "^8.20.0",
         "@vscode/test-cli": "^0.0.10",
         "@vscode/test-electron": "^2.4.1",
         "@vscode/vsce": "^3.2.1",
-        "eslint": "^9.17.0",
-        "glob": "^11.0.0",
+        "eslint": "^9.18.0",
+        "glob": "^11.0.1",
         "prettier": "^3.4.2",
-        "ts-loader": "^9.5.1",
+        "ts-loader": "^9.5.2",
         "typescript": "^5.7.3",
         "webpack": "^5.97.1",
         "webpack-cli": "^6.0.1"

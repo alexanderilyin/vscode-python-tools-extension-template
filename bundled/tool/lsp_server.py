@@ -9,22 +9,11 @@ import os
 import pathlib
 import re
 import sys
-import sysconfig
 import traceback
 from typing import Any, Optional, Sequence
 
-
-# **********************************************************
-# Update sys.path before importing any bundled libraries.
-# **********************************************************
-def update_sys_path(path_to_add: str, strategy: str) -> None:
-    """Add given path to `sys.path`."""
-    if path_to_add not in sys.path and os.path.isdir(path_to_add):
-        if strategy == "useBundled":
-            sys.path.insert(0, path_to_add)
-        elif strategy == "fromEnvironment":
-            sys.path.append(path_to_add)
-
+# TODO: Maybe it should be just '.lsp_utils' and no hacky path manipulation?
+from tool.lsp_utils import update_sys_path
 
 # Ensure that we can import LSP libraries, and other bundled libraries.
 update_sys_path(
@@ -48,7 +37,7 @@ RUNNER = pathlib.Path(__file__).parent / "lsp_runner.py"
 MAX_WORKERS = 5
 # TODO: Update the language server name and version.
 LSP_SERVER = server.LanguageServer(
-    name="<pytool-display-name>", version="<server version>", max_workers=MAX_WORKERS
+    name="PartCAD", version="0.7.57", max_workers=MAX_WORKERS
 )
 
 
@@ -71,7 +60,7 @@ TOOL_MODULE = "partcad"
 
 # TODO: Update TOOL_DISPLAY with a display name for your tool.
 # e.g, TOOL_DISPLAY = "Pylint"
-TOOL_DISPLAY = "<pytool-display-name>"
+TOOL_DISPLAY = "PartCAD"
 
 # TODO: Update TOOL_ARGS with default argument you have to pass to your tool in
 # all scenarios.
@@ -91,7 +80,7 @@ TOOL_ARGS = []  # default arguments always passed to your tool.
 @LSP_SERVER.feature(lsp.TEXT_DOCUMENT_DID_OPEN)
 def did_open(params: lsp.DidOpenTextDocumentParams) -> None:
     """LSP handler for textDocument/didOpen request."""
-    document = LSP_SERVER.workspace.get_document(params.text_document.uri)
+    document = LSP_SERVER.workspace.get_text_document(params.text_document.uri)
     diagnostics: list[lsp.Diagnostic] = _linting_helper(document)
     LSP_SERVER.publish_diagnostics(document.uri, diagnostics)
 
@@ -99,7 +88,7 @@ def did_open(params: lsp.DidOpenTextDocumentParams) -> None:
 @LSP_SERVER.feature(lsp.TEXT_DOCUMENT_DID_SAVE)
 def did_save(params: lsp.DidSaveTextDocumentParams) -> None:
     """LSP handler for textDocument/didSave request."""
-    document = LSP_SERVER.workspace.get_document(params.text_document.uri)
+    document = LSP_SERVER.workspace.get_text_document(params.text_document.uri)
     diagnostics: list[lsp.Diagnostic] = _linting_helper(document)
     LSP_SERVER.publish_diagnostics(document.uri, diagnostics)
 
@@ -107,7 +96,7 @@ def did_save(params: lsp.DidSaveTextDocumentParams) -> None:
 @LSP_SERVER.feature(lsp.TEXT_DOCUMENT_DID_CLOSE)
 def did_close(params: lsp.DidCloseTextDocumentParams) -> None:
     """LSP handler for textDocument/didClose request."""
-    document = LSP_SERVER.workspace.get_document(params.text_document.uri)
+    document = LSP_SERVER.workspace.get_text_document(params.text_document.uri)
     # Publishing empty diagnostics to clear the entries for this file.
     LSP_SERVER.publish_diagnostics(document.uri, [])
 
@@ -200,7 +189,7 @@ def formatting(params: lsp.DocumentFormattingParams) -> list[lsp.TextEdit] | Non
     # formatting support on save. You have to return an array of lsp.TextEdit
     # objects, to provide your formatted results.
 
-    document = LSP_SERVER.workspace.get_document(params.text_document.uri)
+    document = LSP_SERVER.workspace.get_text_document(params.text_document.uri)
     edits = _formatting_helper(document)
     if edits:
         return edits
@@ -367,6 +356,7 @@ def _get_settings_by_document(document: workspace.Document | None):
 # *****************************************************
 # Internal execution APIs.
 # *****************************************************
+# pylint: disable=too-many-branches
 def _run_tool_on_document(
     document: workspace.Document,
     use_stdin: bool = False,
@@ -557,7 +547,8 @@ def _run_tool(extra_args: Sequence[str]) -> utils.RunResult:
                 # If your tool supports a programmatic API then replace the function below
                 # with code for your tool. You can also use `utils.run_api` helper, which
                 # handles changing working directories, managing io streams, etc.
-                # Also update `_run_tool_on_document` function and `utils.run_module` in `lsp_runner.py`.
+                # Also update `_run_tool_on_document` function and `utils.run_module`
+                # in `lsp_runner.py`.
                 result = utils.run_module(
                     module=TOOL_MODULE, argv=argv, use_stdin=True, cwd=cwd
                 )
@@ -574,24 +565,28 @@ def _run_tool(extra_args: Sequence[str]) -> utils.RunResult:
 # *****************************************************
 # Logging and notification.
 # *****************************************************
+# pylint: disable=missing-function-docstring
 def log_to_output(
     message: str, msg_type: lsp.MessageType = lsp.MessageType.Log
 ) -> None:
     LSP_SERVER.show_message_log(message, msg_type)
 
 
+# pylint: disable=missing-function-docstring
 def log_error(message: str) -> None:
     LSP_SERVER.show_message_log(message, lsp.MessageType.Error)
     if os.getenv("LS_SHOW_NOTIFICATION", "off") in ["onError", "onWarning", "always"]:
         LSP_SERVER.show_message(message, lsp.MessageType.Error)
 
 
+# pylint: disable=missing-function-docstring
 def log_warning(message: str) -> None:
     LSP_SERVER.show_message_log(message, lsp.MessageType.Warning)
     if os.getenv("LS_SHOW_NOTIFICATION", "off") in ["onWarning", "always"]:
         LSP_SERVER.show_message(message, lsp.MessageType.Warning)
 
 
+# pylint: disable=missing-function-docstring
 def log_always(message: str) -> None:
     LSP_SERVER.show_message_log(message, lsp.MessageType.Info)
     if os.getenv("LS_SHOW_NOTIFICATION", "off") in ["always"]:
