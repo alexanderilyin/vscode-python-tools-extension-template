@@ -1,0 +1,56 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/python
+{
+	"name": "Python 3",
+    "build": {
+        "dockerfile": "./Dockerfile"
+    },
+    "postStartCommand": {
+        // "Install esbenp.prettier-vscode dependencies": "npm install",
+        // "Install pre-commit hooks": "pre-commit install",
+        "Start D-Bus": "sudo service dbus start & dbus-daemon --session --address=$DBUS_SESSION_BUS_ADDRESS --nofork --nopidfile --syslog-only && sleep",
+        // "Install Nvidia Drivers": "# TODO: sudo apt-get install nvidia-driver-515",
+        // "Install Python dependencies": "pip install --break-system-packages python-jsonrpc-server"
+    },
+	"features": {
+		"ghcr.io/devcontainers/features/github-cli:1": {
+			"installDirectlyFromGitHubRelease": true,
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/python:1": {
+			"installTools": true,
+			// "optimize": true,
+			"version": "3.12"
+		}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"esbenp.prettier-vscode",
+				"dbaeumer.vscode-eslint",
+				"ms-vscode-remote.remote-containers",
+				"amodio.tsl-problem-matcher",
+				"eamodio.gitlens",
+				"firefox-devtools.vscode-firefox-debug",
+				"GitHub.vscode-pull-request-github",
+				"ms-kubernetes-tools.vscode-kubernetes-tools",
+				"ms-azuretools.vscode-docker"
+			]
+		}
+	}
+
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "pip3 install --user -r requirements.txt",
+
+	// Configure tool-specific properties.
+	// "customizations": {},
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}

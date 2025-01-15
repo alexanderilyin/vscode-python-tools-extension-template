@@ -32,6 +32,8 @@ You should know to create and work with python virtual environments.
 1. Open `package.json`, look for and update the following things:
     1. Find and replace `<pytool-module>` with module name for your tool. This will be used internally to create settings namespace, register commands, etc. Recommendation is to use lower case version of the name, no spaces, `-` are ok. For example, replacing `<pytool-module>` with `pylint` will lead to settings looking like `pylint.args`. Another example, replacing `<pytool-module>` with `black-formatter` will make settings look like `black-formatter.args`.
     1. Find and replace `<pytool-display-name>` with display name for your tool. This is used as the title for the extension in market place, extensions view, output logs, etc. For example, for the `black` extension this is `Black Formatter`.
+1. Open `README.md, , look for and update the following things:
+    1. Find and replace `<server version>` with server version for your tool.
 1. Install node packages using `npm install`.
 1. Go to https://marketplace.visualstudio.com/vscode and create a publisher account if you don't already have one.
     1. Use the published name in `package.json` by replacing `<my-publisher>` with the name you registered in the marketplace.
@@ -151,8 +153,82 @@ This can occurs if `bundled/libs` is empty. That is the folder where we put your
 
 Common one is [_pygls_][pygls] module not found.
 
-# TODO: The maintainer of this repo has not yet edited this file
+## TODO
 
-**Repo Owner** Make sure you update this. As a repository owner you will need to update this file with specific instructions for your extension.
+> WARNING  This extension consists of 9677 files, out of which 3 are JavaScript files. For performance reasons,
+> you should bundle your extension: https://aka.ms/vscode-bundle-extension. You should also exclude unnecessary
+> files by adding them to your .vscodeignore: https://aka.ms/vscode-vscodeignore.
+
+### Intermittent
+
+```
+$ nox --session update_packages
+
+nox > Session update_packages raised exception URLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)'))
+Traceback (most recent call last):
+  File "/usr/local/python/3.12.8/lib/python3.12/urllib/request.py", line 1344, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+  File "/usr/local/python/3.12.8/lib/python3.12/http/client.py", line 1336, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/usr/local/python/3.12.8/lib/python3.12/http/client.py", line 1382, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/usr/local/python/3.12.8/lib/python3.12/http/client.py", line 1331, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/local/python/3.12.8/lib/python3.12/http/client.py", line 1091, in _send_output
+    self.send(msg)
+  File "/usr/local/python/3.12.8/lib/python3.12/http/client.py", line 1035, in send
+    self.connect()
+  File "/usr/local/python/3.12.8/lib/python3.12/http/client.py", line 1477, in connect
+    self.sock = self._context.wrap_socket(self.sock,
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/python/3.12.8/lib/python3.12/ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/python/3.12.8/lib/python3.12/ssl.py", line 1041, in _create
+    self.do_handshake()
+  File "/usr/local/python/3.12.8/lib/python3.12/ssl.py", line 1319, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLEOFError: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/python/3.12.8/lib/python3.12/site-packages/nox/sessions.py", line 1036, in execute
+    self.func(session)
+  File "/usr/local/python/3.12.8/lib/python3.12/site-packages/nox/_decorators.py", line 86, in __call__
+    return self.func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/vscode-python-tools-extension-template/noxfile.py", line 169, in update_packages
+    _update_npm_packages(session)
+  File "/workspaces/vscode-python-tools-extension-template/noxfile.py", line 82, in _update_npm_packages
+    data = _get_package_data(package)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/vscode-python-tools-extension-template/noxfile.py", line 61, in _get_package_data
+    with url_lib.urlopen(json_uri) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/python/3.12.8/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/python/3.12.8/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/python/3.12.8/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/python/3.12.8/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/local/python/3.12.8/lib/python3.12/urllib/request.py", line 1392, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/python/3.12.8/lib/python3.12/urllib/request.py", line 1347, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)>
+```
+```
+# package.json
+    // "type": "module",
+
+```
 
 [pygls]: https://github.com/openlawlibrary/pygls

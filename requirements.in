@@ -12,4 +12,10 @@
 pygls
 packaging
 
-# TODO: Add your tool here
+# https://test.pypi.org/project/partcad/
+--extra-index-url https://test.pypi.org/simple/
+partcad>=0.7.57
+ # TODO: Remove after https://github.com/jazzband/pip-tools/issues/2156
+cadquery-ocp==7.7.2
+# python-language-server 0.36.2 requires jedi<0.18.0,>=0.17.2, but you have jedi 0.19.2 which is incompatible.
+# python-lsp-server
